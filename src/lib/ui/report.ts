@@ -35,7 +35,8 @@ export function buildReport(s: Session): string {
     for (const e of kept) {
       lines.push(
         ``,
-        `> ${e.stance === "supports" ? "➕" : "➖"} "${e.quote}"`,
+        `> ${e.stance === "supports" ? "➕" : "➖"} "${e.translation ?? e.quote}"`,
+        ...(e.translation ? [`> _${t.original}: "${e.quote}"_`] : []),
         `> ${e.why} [${e.title}](${e.url})`,
       );
     }

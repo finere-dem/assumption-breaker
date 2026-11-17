@@ -18,6 +18,8 @@ export const HypothesesResultSchema = z.object({
 
 export const SearchPlanSchema = z.object({
   queries: z.array(z.string().min(3)).min(2).max(4),
+  /** Extra query in the founder's language, to reach local sources. */
+  localQuery: z.string().optional().default(""),
 });
 
 export const ClassificationSchema = z.object({
@@ -26,6 +28,7 @@ export const ClassificationSchema = z.object({
       sourceId: z.string(),
       stance: z.enum(["supports", "contradicts", "irrelevant"]),
       quote: z.string(),
+      translation: z.string().optional().default(""),
       why: z.string(),
     }),
   ),
@@ -38,6 +41,8 @@ export type EvidenceItem = {
   origin: string;
   stance: "supports" | "contradicts";
   quote: string;
+  /** The quote in the founder's language when the source is in another one. */
+  translation?: string;
   why: string;
 };
 

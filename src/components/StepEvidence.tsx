@@ -86,8 +86,13 @@ export function StepEvidence({
                                 className={`flex flex-col gap-2 rounded-lg border-l-4 bg-paper p-3 text-sm ${stance === "supports" ? "border-pro" : "border-con"} ${dismissed ? "opacity-40" : ""}`}
                               >
                                 <blockquote className={`leading-relaxed ${dismissed ? "line-through" : ""}`}>
-                                  “{e.quote}”
+                                  “{e.translation ?? e.quote}”
                                 </blockquote>
+                                {e.translation && (
+                                  <p className="text-xs italic text-ink/50">
+                                    {t.original} : “{e.quote}”
+                                  </p>
+                                )}
                                 <p className="text-xs text-ink/70">{e.why}</p>
                                 <div className="flex items-center justify-between gap-2 text-xs">
                                   <a

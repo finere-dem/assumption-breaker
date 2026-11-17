@@ -47,14 +47,32 @@ export async function gatherEvidence(
 ): Promise<{ result: HypothesisEvidence; usage: Usage[] }> {
   const plan = await chatJson(
     [
-      { role: "system", content: PLAN_SYSTEM },
+      {
+        role: "system",
+        content:
+          lang === "en"
+            ? PLAN_SYSTEM
+            : `${PLAN_SYSTEM}\nThe founder works in ${LANGS[lang]}. Also return "localQuery": one more query written in ${LANGS[lang]}, to find local sources (local press, surveys, forums).\nAnswer with JSON only: {"queries":["...","...","..."],"localQuery":"..."}`,
+      },
       { role: "user", content: `Idea: ${idea}\nHypothesis to test: ${hypothesis.statement}` },
     ],
     SearchPlanSchema,
   );
-  const queries = plan.data.queries;
+  const queries = plan.data.localQuery.trim()
+    ? [...plan.data.queries, plan.data.localQuery.trim()]
+    : plan.data.queries;
   const { sources: found, failures } = await searchEvidence(queries);
-  const sources: Source[] = found.slice(0, MAX_SOURCES_TO_READ);
+  // Syndicated articles (same text on several sites) would count as several
+  // pieces of evidence: keep one copy, judged on the opening of the text.
+  const seenText = new Set<string>();
+  const sources: Source[] = found
+    .filter((s) => {
+      const key = normalize(s.text).slice(0, 160);
+      if (seenText.has(key)) return false;
+      seenText.add(key);
+      return true;
+    })
+    .slice(0, MAX_SOURCES_TO_READ);
   const usage = [...plan.usage];
 
   if (sources.length === 0) {
@@ -77,7 +95,10 @@ export async function gatherEvidence(
     .join("\n\n");
   const classified = await chatJson(
     [
-      { role: "system", content: `${CLASSIFY_SYSTEM}\nWrite "why" in ${LANGS[lang]}; keep "quote" in the source's language.` },
+      {
+        role: "system",
+        content: `${CLASSIFY_SYSTEM}\nWrite "why" in ${LANGS[lang]}. Keep "quote" exactly as written in the source. When the quote is not in ${LANGS[lang]}, put a faithful ${LANGS[lang]} translation of it in "translation", otherwise "".`,
+      },
       {
         role: "user",
         content: `Hypothesis: ${hypothesis.statement}\n\nSources:\n${sourceBlock}`,
@@ -92,13 +113,17 @@ export async function gatherEvidence(
   const byId = new Map(sources.map((s) => [s.id, s]));
   let rejectedQuotes = 0;
   const evidence: EvidenceItem[] = [];
+  const seenQuotes = new Set<string>();
   for (const item of classified.data.items) {
     if (item.stance === "irrelevant") continue;
     const src = byId.get(item.sourceId);
-    if (!src || item.quote.length < 10 || !normalize(src.text).includes(normalize(item.quote))) {
+    const key = normalize(item.quote);
+    if (!src || item.quote.length < 10 || !normalize(src.text).includes(key)) {
       rejectedQuotes++;
       continue;
     }
+    if (seenQuotes.has(key)) continue;
+    seenQuotes.add(key);
     evidence.push({
       sourceId: src.id,
       title: src.title,
@@ -106,6 +131,7 @@ export async function gatherEvidence(
       origin: src.origin,
       stance: item.stance,
       quote: item.quote,
+      translation: item.translation.trim() || undefined,
       why: item.why,
     });
   }
