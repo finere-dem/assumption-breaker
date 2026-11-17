@@ -3,6 +3,10 @@
 An AI agent that stress-tests a founder's idea against real-world evidence, **without ever deciding for them**.
 Built for the [AI Agents for Founders Challenge, HETIC 2026](https://ai-agents-founders-hetic-26.devpost.com/).
 
+**Try it: https://assumption-breaker.vercel.app** (no account; click "Use an example" for an instant precomputed run).
+
+Documentation for the jury (architecture, AI disclosure, human judgment, responsible AI): [docs/SUBMISSION.md](docs/SUBMISSION.md).
+
 1. The founder describes the idea.
 2. The agent lists the riskiest assumptions (desirability, feasibility, viability). **The founder ranks them.**
 3. For each kept assumption, the agent searches the web and returns evidence **for and against**, each with a verbatim quote and its link. Quotes are checked word for word against the source in code: an invented quote is dropped. With fewer than 2 pieces of evidence, the agent says "insufficient evidence" instead of guessing.
