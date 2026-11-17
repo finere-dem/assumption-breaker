@@ -1,5 +1,5 @@
 import type { Lang } from "@/lib/agent/schemas";
-import { EXAMPLES, type Dict } from "@/lib/ui/i18n";
+import { EXAMPLE_NOTES, EXAMPLES, type Dict } from "@/lib/ui/i18n";
 import type { Session } from "@/lib/ui/session";
 import type { Patch } from "./AssumptionBreaker";
 import { Button, ErrorBox, Spinner } from "./ui";
@@ -35,7 +35,15 @@ export function StepIdea({
             className="rounded-md border border-line bg-white px-2 py-1"
             value={session.lang}
             disabled={loading}
-            onChange={(e) => update({ lang: e.target.value as Lang })}
+            onChange={(e) => {
+              const lang = e.target.value as Lang;
+              // An untouched example follows the language switch; the founder's own text never changes.
+              update((s) => ({
+                lang,
+                idea: s.idea === EXAMPLES[s.lang] ? EXAMPLES[lang] : s.idea,
+                notes: s.notes === EXAMPLE_NOTES[s.lang] ? EXAMPLE_NOTES[lang] : s.notes,
+              }));
+            }}
           >
             <option value="en">English</option>
             <option value="fr">Français</option>
