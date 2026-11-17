@@ -1,3 +1,4 @@
+import type { Analysis, Guide } from "../agent/interviews";
 import type { Hypothesis, HypothesisEvidence, Lang } from "../agent/schemas";
 import type { Usage } from "../llm";
 
@@ -5,7 +6,7 @@ export type Decision = "continue" | "pivot" | "stop";
 
 // Everything stays in the founder's browser: no account, no database.
 export type Session = {
-  step: 1 | 2 | 3 | 4;
+  step: 1 | 2 | 3 | 4 | 5;
   lang: Lang;
   idea: string;
   hypotheses: Hypothesis[];
@@ -14,6 +15,9 @@ export type Session = {
   evidence: Record<string, HypothesisEvidence>;
   /** `${hypothesisId}:${sourceId}` of evidence the founder judged irrelevant. */
   dismissed: string[];
+  guide: Guide | null;
+  notes: string;
+  analysis: Analysis | null;
   decision: Decision | null;
   reason: string;
   nextStep: string;
@@ -32,6 +36,9 @@ export function emptySession(lang: Lang = "en"): Session {
     ranked: [],
     evidence: {},
     dismissed: [],
+    guide: null,
+    notes: "",
+    analysis: null,
     decision: null,
     reason: "",
     nextStep: "",
@@ -39,7 +46,7 @@ export function emptySession(lang: Lang = "en"): Session {
   };
 }
 
-const KEY = "assumption-breaker:v1";
+const KEY = "assumption-breaker:v2";
 
 export function loadSession(): Session | null {
   try {

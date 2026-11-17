@@ -10,6 +10,7 @@ import {
   type Lang,
 } from "./schemas";
 import { computeSignal } from "./signal";
+import { normalize } from "../text";
 
 const MAX_SOURCES_TO_READ = 12;
 
@@ -29,16 +30,6 @@ Never stretch a source to fit. "why" must name which claim the source bears on.
 "quote" MUST be copied word for word from the source text (10 to 40 words), or "" when irrelevant.
 "why": one sentence.
 Answer with JSON only: {"items":[{"sourceId":"S1","stance":"irrelevant","quote":"","why":"..."}]}`;
-
-// Compare letters and digits only, so curly quotes, dashes or a dropped comma
-// do not make a genuine quote look invented.
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^\p{L}\p{N}]+/gu, " ")
-    .trim();
-}
 
 export async function gatherEvidence(
   hypothesis: Hypothesis,

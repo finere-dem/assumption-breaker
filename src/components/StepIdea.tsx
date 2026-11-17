@@ -59,6 +59,7 @@ export function StepIdea({
         </Button>
       </div>
       {loading && <Spinner label={t.thinking} />}
+      <p className="rounded-lg bg-muted p-3 text-xs leading-relaxed text-ink/70">🔒 {t.privacy}</p>
       {error && !loading && <ErrorBox message={error} onRetry={onSubmit} retryLabel={t.retry} />}
     </section>
   );

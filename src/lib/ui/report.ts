@@ -43,6 +43,25 @@ export function buildReport(s: Session): string {
     if (kept.length === 0) lines.push(``, `_${t.noEvidence}_`);
   });
 
+  if (s.guide) {
+    lines.push(``, `## ${t.guideTitle}`, ``);
+    s.ranked.forEach((id, i) => {
+      for (const q of s.guide!.questions.filter((x) => x.hypothesisId === id)) {
+        lines.push(`- (${i + 1}) ${q.question} _${t.reveals}: ${q.reveals}_`);
+      }
+    });
+  }
+  if (s.analysis) {
+    lines.push(``, `## ${t.flagsTitle} (${s.analysis.flags.length})`, ``);
+    for (const f of s.analysis.flags) {
+      lines.push(`- **${t.bias[f.type]}**: "${f.excerpt}". ${f.explanation}${f.better ? ` ${t.instead}: "${f.better}"` : ""}`);
+    }
+    lines.push(``, `## ${t.learningsTitle} (${s.analysis.learnings.length})`, ``);
+    for (const l of s.analysis.learnings) {
+      lines.push(`- (${s.ranked.indexOf(l.hypothesisId) + 1}) ${l.stance === "supports" ? "➕" : "➖"} "${l.excerpt}". ${l.why}`);
+    }
+  }
+
   lines.push(
     ``,
     `## ${t.verdictTitle}`,

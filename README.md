@@ -6,8 +6,10 @@ Built for the [AI Agents for Founders Challenge, HETIC 2026](https://ai-agents-f
 1. The founder describes the idea.
 2. The agent lists the riskiest assumptions (desirability, feasibility, viability). **The founder ranks them.**
 3. For each kept assumption, the agent searches the web and returns evidence **for and against**, each with a verbatim quote and its link. Quotes are checked word for word against the source in code: an invented quote is dropped. With fewer than 2 pieces of evidence, the agent says "insufficient evidence" instead of guessing.
-4. *(in progress)* Interview guide (Mom Test) and bias detector on interview notes.
-5. *(in progress)* **The founder writes the verdict**: continue, pivot or stop.
+4. The agent writes a customer interview guide that follows *The Mom Test* (past behaviour, no pitching, no "would you buy"). **The founder does the interviews**, pastes the notes, and a bias detector flags leading questions, hypotheticals, pitching, compliments taken as evidence, vague answers and conclusions the facts do not back. Excerpts are checked against the notes, like web quotes.
+5. **The founder writes the verdict**: continue, pivot or stop, with a mandatory reason. The full report downloads as Markdown.
+
+Interface in English and French. Nothing is stored server-side: the session lives in the founder's browser.
 
 Every run shows its token count. Cost: 0 EUR.
 

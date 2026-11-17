@@ -18,8 +18,11 @@ export function StepAssumptions({
   const [own, setOwn] = useState("");
   const { hypotheses, ranked } = session;
 
+  // The interview guide is written for the ranked assumptions: any change makes it stale.
   const toggle = (id: string) =>
     update((s) => ({
+      guide: null,
+      analysis: null,
       ranked: s.ranked.includes(id)
         ? s.ranked.filter((x) => x !== id)
         : s.ranked.length < MAX_RANKED
@@ -34,12 +37,14 @@ export function StepAssumptions({
       const j = i + dir;
       if (i < 0 || j < 0 || j >= r.length) return {};
       [r[i], r[j]] = [r[j], r[i]];
-      return { ranked: r };
+      return { ranked: r, guide: null, analysis: null };
     });
 
   const edit = (id: string, statement: string) =>
     update((s) => ({
       hypotheses: s.hypotheses.map((h) => (h.id === id ? { ...h, statement } : h)),
+      guide: null,
+      analysis: null,
       // Evidence found for the old wording no longer applies.
       evidence: Object.fromEntries(Object.entries(s.evidence).filter(([k]) => k !== id)),
     }));

@@ -37,10 +37,17 @@ export function StepVerdict({
           const h = session.hypotheses.find((x) => x.id === id);
           if (!h) return null;
           const signal = computeSignal(keptEvidence(session, id));
+          const field = session.analysis?.learnings.filter((l) => l.hypothesisId === id) ?? [];
+          const fieldPro = field.filter((l) => l.stance === "supports").length;
           return (
             <div key={id} className="flex flex-wrap items-center gap-3 border-t border-line pt-2 first-of-type:border-0 first-of-type:pt-0">
               <span className="text-sm font-bold text-human">{i + 1}</span>
               <p className="min-w-0 flex-1 text-sm">{h.statement}</p>
+              {field.length > 0 && (
+                <span className="rounded-full bg-human/10 px-2.5 py-1 text-xs font-semibold text-human">
+                  {t.field} : +{fieldPro} / −{field.length - fieldPro}
+                </span>
+              )}
               <SignalBadge signal={signal} label={t.signal[signal]} />
             </div>
           );
@@ -85,7 +92,7 @@ export function StepVerdict({
       </label>
 
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
-        <Button variant="ghost" onClick={() => update({ step: 3 })}>
+        <Button variant="ghost" onClick={() => update({ step: 4 })}>
           {t.back}
         </Button>
         <Button onClick={download} disabled={!ready}>

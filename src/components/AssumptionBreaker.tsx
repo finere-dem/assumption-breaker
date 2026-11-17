@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Analysis, Guide } from "@/lib/agent/interviews";
 import type { Hypothesis, HypothesisEvidence } from "@/lib/agent/schemas";
 import type { Usage } from "@/lib/llm";
 import { DICTS } from "@/lib/ui/i18n";
@@ -10,6 +11,7 @@ import { Button } from "./ui";
 import { StepAssumptions } from "./StepAssumptions";
 import { StepEvidence } from "./StepEvidence";
 import { StepIdea } from "./StepIdea";
+import { StepInterviews } from "./StepInterviews";
 import { StepVerdict } from "./StepVerdict";
 
 export type Patch = Partial<Session> | ((s: Session) => Partial<Session>);
@@ -60,7 +62,15 @@ export function AssumptionBreaker() {
         lang: session.lang,
       });
       addUsage(r.usage);
-      update({ hypotheses: r.hypotheses, ranked: [], evidence: {}, dismissed: [], step: 2 });
+      update({
+        hypotheses: r.hypotheses,
+        ranked: [],
+        evidence: {},
+        dismissed: [],
+        guide: null,
+        analysis: null,
+        step: 2,
+      });
       setStatus({});
     } catch {
       setError(t.busy);
@@ -88,6 +98,44 @@ export function AssumptionBreaker() {
       } catch {
         setStatus((st) => ({ ...st, [id]: "error" }));
       }
+    }
+  }
+
+  const rankedHypotheses = (s: Session) =>
+    s.ranked.map((id) => s.hypotheses.find((h) => h.id === id)).filter((h) => h !== undefined);
+
+  async function makeGuide() {
+    if (!session) return;
+    setStatus((st) => ({ ...st, guide: "loading" }));
+    try {
+      const r = await post<{ guide: Guide; usage: Usage[] }>("/api/interviews/guide", {
+        idea: session.idea,
+        hypotheses: rankedHypotheses(session),
+        lang: session.lang,
+      });
+      addUsage(r.usage);
+      update({ guide: r.guide });
+      setStatus((st) => Object.fromEntries(Object.entries(st).filter(([k]) => k !== "guide")));
+    } catch {
+      setStatus((st) => ({ ...st, guide: "error" }));
+    }
+  }
+
+  async function analyzeNotes() {
+    if (!session) return;
+    setStatus((st) => ({ ...st, analysis: "loading" }));
+    try {
+      const r = await post<{ analysis: Analysis; usage: Usage[] }>("/api/interviews/analyze", {
+        idea: session.idea,
+        hypotheses: rankedHypotheses(session),
+        notes: session.notes,
+        lang: session.lang,
+      });
+      addUsage(r.usage);
+      update({ analysis: r.analysis });
+      setStatus((st) => Object.fromEntries(Object.entries(st).filter(([k]) => k !== "analysis")));
+    } catch {
+      setStatus((st) => ({ ...st, analysis: "error" }));
     }
   }
 
@@ -159,7 +207,17 @@ export function AssumptionBreaker() {
         {session.step === 3 && (
           <StepEvidence session={session} t={t} update={update} status={status} onRetry={() => searchEvidence(session)} />
         )}
-        {session.step === 4 && <StepVerdict session={session} t={t} update={update} />}
+        {session.step === 4 && (
+          <StepInterviews
+            session={session}
+            t={t}
+            update={update}
+            status={status}
+            onGuide={makeGuide}
+            onAnalyze={analyzeNotes}
+          />
+        )}
+        {session.step === 5 && <StepVerdict session={session} t={t} update={update} />}
       </main>
     </div>
   );
