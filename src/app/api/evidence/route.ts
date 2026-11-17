@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { withCache } from "@/lib/cache";
+import { tooManyRequests } from "@/lib/guard";
 import { gatherEvidence } from "@/lib/agent/evidence";
 import { HypothesisSchema } from "@/lib/agent/schemas";
 
@@ -12,13 +14,15 @@ const Body = z.object({
 });
 
 export async function POST(request: Request) {
+  const limited = tooManyRequests(request);
+  if (limited) return limited;
   const parsed = Body.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
   const { idea, hypothesis, lang } = parsed.data;
   try {
-    return Response.json(await gatherEvidence(hypothesis, idea, lang));
+    return Response.json(await withCache("evidence", parsed.data, () => gatherEvidence(hypothesis, idea, lang)));
   } catch (e) {
     console.error("evidence failed:", (e as Error).message);
     return Response.json(

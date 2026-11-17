@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "pipeline": "node --env-file-if-exists=.env.local --import tsx scripts/run-pipeline.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cache:examples": "node --env-file-if-exists=.env.local --import tsx scripts/build-example-cache.ts"
   },
   "dependencies": {
     "next": "16.4.6",

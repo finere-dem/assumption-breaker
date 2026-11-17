@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { withCache } from "@/lib/cache";
+import { tooManyRequests } from "@/lib/guard";
 import { generateHypotheses } from "@/lib/agent/hypotheses";
 
 export const maxDuration = 60;
@@ -9,6 +11,8 @@ const Body = z.object({
 });
 
 export async function POST(request: Request) {
+  const limited = tooManyRequests(request);
+  if (limited) return limited;
   const parsed = Body.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return Response.json(
@@ -17,7 +21,7 @@ export async function POST(request: Request) {
     );
   }
   try {
-    return Response.json(await generateHypotheses(parsed.data.idea, parsed.data.lang));
+    return Response.json(await withCache("hypotheses", parsed.data, () => generateHypotheses(parsed.data.idea, parsed.data.lang)));
   } catch (e) {
     console.error("hypotheses failed:", (e as Error).message);
     return Response.json(
