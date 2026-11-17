@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const LANGS = { en: "English", fr: "French" } as const;
+export type Lang = keyof typeof LANGS;
+
 export const HypothesisSchema = z.object({
   id: z.string(),
   statement: z.string().min(10),

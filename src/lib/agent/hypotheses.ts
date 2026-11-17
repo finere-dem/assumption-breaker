@@ -1,5 +1,5 @@
 import { chatJson, type Usage } from "../llm";
-import { HypothesesResultSchema, type Hypothesis } from "./schemas";
+import { HypothesesResultSchema, LANGS, type Hypothesis, type Lang } from "./schemas";
 
 const SYSTEM = `You help early-stage founders find the riskiest assumptions behind their idea.
 You never judge whether the idea is good. You only surface what must be true for it to work.
@@ -10,15 +10,15 @@ Rules:
 - Prefer the assumptions that would kill the idea if wrong, not generic ones.
 - "whyRisky": one sentence on why this is uncertain for THIS idea.
 - "ifWrong": one sentence on what happens to the idea if the hypothesis is false.
-- Write in the same language as the founder's idea.
 - Answer with JSON only: {"hypotheses":[{"id":"H1","statement":"...","category":"desirability","whyRisky":"...","ifWrong":"..."}]}`;
 
 export async function generateHypotheses(
   idea: string,
+  lang: Lang = "en",
 ): Promise<{ hypotheses: Hypothesis[]; usage: Usage[] }> {
   const { data, usage } = await chatJson(
     [
-      { role: "system", content: SYSTEM },
+      { role: "system", content: `${SYSTEM}\nWrite every text field in ${LANGS[lang]}.` },
       { role: "user", content: `Founder's idea:\n"""${idea}"""` },
     ],
     HypothesesResultSchema,

@@ -3,11 +3,13 @@ import { searchEvidence, type Source } from "../search";
 import {
   ClassificationSchema,
   SearchPlanSchema,
+  LANGS,
   type EvidenceItem,
-  type EvidenceSignal,
   type Hypothesis,
   type HypothesisEvidence,
+  type Lang,
 } from "./schemas";
+import { computeSignal } from "./signal";
 
 const MAX_SOURCES_TO_READ = 12;
 
@@ -25,7 +27,7 @@ For each source decide:
 - "irrelevant": the source only mentions the topic without facts bearing on the claims, or concerns a different population or market.
 Never stretch a source to fit. "why" must name which claim the source bears on.
 "quote" MUST be copied word for word from the source text (10 to 40 words), or "" when irrelevant.
-"why": one sentence, in the language of the hypothesis.
+"why": one sentence.
 Answer with JSON only: {"items":[{"sourceId":"S1","stance":"irrelevant","quote":"","why":"..."}]}`;
 
 // Compare letters and digits only, so curly quotes, dashes or a dropped comma
@@ -38,18 +40,10 @@ function normalize(s: string): string {
     .trim();
 }
 
-function computeSignal(evidence: EvidenceItem[]): EvidenceSignal {
-  const pro = evidence.filter((e) => e.stance === "supports").length;
-  const con = evidence.filter((e) => e.stance === "contradicts").length;
-  if (pro + con < 2) return "insufficient";
-  if (con === 0) return "leans-supported";
-  if (pro === 0) return "leans-contradicted";
-  return "mixed";
-}
-
 export async function gatherEvidence(
   hypothesis: Hypothesis,
   idea: string,
+  lang: Lang = "en",
 ): Promise<{ result: HypothesisEvidence; usage: Usage[] }> {
   const plan = await chatJson(
     [
@@ -83,7 +77,7 @@ export async function gatherEvidence(
     .join("\n\n");
   const classified = await chatJson(
     [
-      { role: "system", content: CLASSIFY_SYSTEM },
+      { role: "system", content: `${CLASSIFY_SYSTEM}\nWrite "why" in ${LANGS[lang]}; keep "quote" in the source's language.` },
       {
         role: "user",
         content: `Hypothesis: ${hypothesis.statement}\n\nSources:\n${sourceBlock}`,

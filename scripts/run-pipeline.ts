@@ -1,7 +1,7 @@
 // CLI run of the agent pipeline: idea -> hypotheses -> (founder picks) -> evidence.
 // Usage:
 //   npm run pipeline -- examples/meal-prep-students.txt            (picks H1,H2,H3)
-//   npm run pipeline -- examples/meal-prep-students.txt --pick 2,4,5
+//   npm run pipeline -- examples/meal-prep-students.txt --pick 2,4,5 --lang fr
 // The --pick flag stands in for the founder's ranking (human checkpoint #1 in the UI).
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -19,12 +19,13 @@ async function main() {
   const idea = readFileSync(file, "utf8").trim();
   const pickArg = rest[rest.indexOf("--pick") + 1];
   const picks = rest.includes("--pick") && pickArg ? pickArg.split(",").map(Number) : [1, 2, 3];
+  const lang = rest[rest.indexOf("--lang") + 1] === "fr" ? "fr" : "en";
 
   const allUsage: Usage[] = [];
   const t0 = Date.now();
 
   console.log("Generating hypotheses...");
-  const { hypotheses, usage } = await generateHypotheses(idea);
+  const { hypotheses, usage } = await generateHypotheses(idea, lang);
   allUsage.push(...usage);
   for (const h of hypotheses) {
     console.log(`  ${h.id} [${h.category}] ${h.statement}\n      risk: ${h.whyRisky}`);
@@ -36,7 +37,7 @@ async function main() {
   const evidence = [];
   for (const h of selected) {
     console.log(`Testing ${h.id}: ${h.statement}`);
-    const { result, usage: u } = await gatherEvidence(h, idea);
+    const { result, usage: u } = await gatherEvidence(h, idea, lang);
     allUsage.push(...u);
     evidence.push(result);
     console.log(`  queries: ${result.queries.join(" | ")}`);
