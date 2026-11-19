@@ -56,6 +56,7 @@ export function AssumptionBreaker() {
     if (!session) return;
     setError(null);
     setStatus({ hypotheses: "loading" });
+    update((s) => ({ startedAt: s.startedAt ?? Date.now() }));
     try {
       const r = await post<{ hypotheses: Hypothesis[]; usage: Usage[] }>("/api/hypotheses", {
         idea: session.idea,

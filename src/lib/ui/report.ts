@@ -3,6 +3,10 @@ import { summarizeUsage } from "../usage";
 import { DICTS } from "./i18n";
 import { keptEvidence, type Session } from "./session";
 
+export function minutesSince(startedAt: number, now = Date.now()): number {
+  return Math.max(1, Math.round((now - startedAt) / 60_000));
+}
+
 export function buildReport(s: Session): string {
   const t = DICTS[s.lang];
   const usage = summarizeUsage(s.usage);
@@ -71,6 +75,7 @@ export function buildReport(s: Session): string {
     s.reason,
   );
   if (s.nextStep.trim()) lines.push(``, `**${t.nextLabel}:** ${s.nextStep}`);
+  if (s.startedAt) lines.push(``, `⏱ ${t.duration(minutesSince(s.startedAt))}`);
   lines.push(
     ``,
     `---`,

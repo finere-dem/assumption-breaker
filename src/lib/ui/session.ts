@@ -21,6 +21,8 @@ export type Session = {
   decision: Decision | null;
   reason: string;
   nextStep: string;
+  /** When the agent was first asked to analyse this idea (ms), for the time-saved measure. */
+  startedAt: number | null;
   usage: Usage[];
 };
 
@@ -42,6 +44,7 @@ export function emptySession(lang: Lang = "en"): Session {
     decision: null,
     reason: "",
     nextStep: "",
+    startedAt: null,
     usage: [],
   };
 }

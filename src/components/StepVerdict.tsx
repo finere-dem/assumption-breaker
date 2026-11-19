@@ -1,6 +1,7 @@
 import { computeSignal } from "@/lib/agent/signal";
 import type { Dict } from "@/lib/ui/i18n";
-import { buildReport } from "@/lib/ui/report";
+import { useState } from "react";
+import { buildReport, minutesSince } from "@/lib/ui/report";
 import { keptEvidence, MIN_REASON, type Decision, type Session } from "@/lib/ui/session";
 import type { Patch } from "./AssumptionBreaker";
 import { Button, Checkpoint, SignalBadge } from "./ui";
@@ -16,6 +17,7 @@ export function StepVerdict({
 }) {
   const missing = Math.max(0, MIN_REASON - session.reason.trim().length);
   const ready = session.decision !== null && missing === 0;
+  const [openedAt] = useState(() => Date.now());
 
   function download() {
     const blob = new Blob([buildReport(session)], { type: "text/markdown;charset=utf-8" });
@@ -30,6 +32,9 @@ export function StepVerdict({
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-lg font-semibold">{t.verdictTitle}</h2>
+      {session.startedAt && (
+        <p className="text-sm text-ink/60">⏱ {t.duration(minutesSince(session.startedAt, openedAt))}</p>
+      )}
 
       <div className="flex flex-col gap-2 rounded-xl border border-line bg-white p-4">
         <h3 className="text-xs font-bold uppercase tracking-wide text-ink/50">{t.summary}</h3>

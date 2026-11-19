@@ -61,6 +61,7 @@ const en = {
   nextPlaceholder: "Example: interview 5 international students this week about what they ate yesterday",
   download: "Download my report (.md)",
   summary: "Summary",
+  duration: (min: number) => `Time spent on this analysis: ${min} min`,
   interviewsTitle: "Now talk to real people",
   checkpointInterviews:
     "No agent can do this step for you. Interview 3 to 5 people from your target this week with the guide below, then paste your notes: the agent checks them for the traps that make founders hear what they want to hear.",
@@ -163,6 +164,7 @@ const fr: Dict = {
   nextPlaceholder: "Exemple : interroger 5 étudiants étrangers cette semaine sur ce qu'ils ont mangé hier",
   download: "Télécharger mon rapport (.md)",
   summary: "Synthèse",
+  duration: (min: number) => `Temps passé sur cette analyse : ${min} min`,
   interviewsTitle: "Maintenant, parle à de vraies personnes",
   checkpointInterviews:
     "Aucun agent ne peut faire cette étape à ta place. Interroge 3 à 5 personnes de ta cible cette semaine avec le guide ci-dessous, puis colle tes notes : l'agent y cherche les pièges qui font entendre au fondateur ce qu'il veut entendre.",
