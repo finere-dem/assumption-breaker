@@ -4,6 +4,15 @@ import { useState } from "react";
 import { buildReport, minutesSince } from "@/lib/ui/report";
 import { keptEvidence, MIN_REASON, type Decision, type Session } from "@/lib/ui/session";
 import type { Patch } from "./AssumptionBreaker";
+
+// Public Google Form for testers; the first question (time spent) is prefilled.
+const FEEDBACK_FORM =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfr4k07nAwAp5PaCPqsuWg1gNM2kLovKkg92VzBNXwv2mgUGA/viewform";
+const TIME_FIELD = "entry.1305869352";
+
+function feedbackUrl(minutes: number | null): string {
+  return minutes === null ? FEEDBACK_FORM : `${FEEDBACK_FORM}?usp=pp_url&${TIME_FIELD}=${minutes}`;
+}
 import { Button, Checkpoint, SignalBadge } from "./ui";
 
 export function StepVerdict({
@@ -104,6 +113,18 @@ export function StepVerdict({
           {t.download}
         </Button>
       </div>
+
+      <a
+        href={feedbackUrl(session.startedAt ? minutesSince(session.startedAt, openedAt) : null)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-human/30 bg-human/8 p-4 text-sm hover:bg-human/12"
+      >
+        <span>
+          <strong>{t.feedbackTitle}</strong> {t.feedbackText}
+        </span>
+        <span className="font-semibold text-human">{t.feedbackCta} →</span>
+      </a>
     </section>
   );
 }

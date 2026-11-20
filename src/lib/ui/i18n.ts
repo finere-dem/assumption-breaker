@@ -61,6 +61,9 @@ const en = {
   nextPlaceholder: "Example: interview 5 international students this week about what they ate yesterday",
   download: "Download my report (.md)",
   summary: "Summary",
+  feedbackTitle: "Testing the tool?",
+  feedbackText: "Your feedback takes 2 minutes and helps a lot (form in French).",
+  feedbackCta: "Give my feedback",
   duration: (min: number) => `Time spent on this analysis: ${min} min`,
   interviewsTitle: "Now talk to real people",
   checkpointInterviews:
@@ -164,6 +167,9 @@ const fr: Dict = {
   nextPlaceholder: "Exemple : interroger 5 étudiants étrangers cette semaine sur ce qu'ils ont mangé hier",
   download: "Télécharger mon rapport (.md)",
   summary: "Synthèse",
+  feedbackTitle: "Tu testes l'outil ?",
+  feedbackText: "Ton avis prend 2 minutes et m'aide énormément.",
+  feedbackCta: "Donner mon avis",
   duration: (min: number) => `Temps passé sur cette analyse : ${min} min`,
   interviewsTitle: "Maintenant, parle à de vraies personnes",
   checkpointInterviews:
