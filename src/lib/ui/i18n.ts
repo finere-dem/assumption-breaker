@@ -15,7 +15,7 @@ const en = {
 
   ideaTitle: "Describe your idea",
   ideaHelp: "Who has the problem, what the problem is, what you sell and at what price. 3 to 5 sentences are enough.",
-  ideaPlaceholder: "Example: a weekly meal-prep subscription for international students in Paris...",
+  ideaPlaceholder: "Example: a platform that houses students at seniors who live alone...",
   useExample: "Use an example",
   language: "Language",
   findAssumptions: "Find my riskiest assumptions",
@@ -121,7 +121,7 @@ const fr: Dict = {
 
   ideaTitle: "Décris ton idée",
   ideaHelp: "Qui a le problème, quel est le problème, ce que tu vends et à quel prix. 3 à 5 phrases suffisent.",
-  ideaPlaceholder: "Exemple : un abonnement hebdomadaire de plats pour étudiants étrangers à Paris...",
+  ideaPlaceholder: "Exemple : une plateforme qui loge des étudiants chez des seniors qui vivent seuls...",
   useExample: "Prendre un exemple",
   language: "Langue",
   findAssumptions: "Trouver mes hypothèses les plus risquées",
@@ -214,43 +214,47 @@ const fr: Dict = {
 export const DICTS: Record<Lang, Dict> = { en, fr };
 
 export const EXAMPLES: Record<Lang, string> = {
-  en: "A weekly meal-prep subscription for international students in Paris, delivering home-style dishes from their country of origin (West African, North African, Asian), cooked by diaspora home cooks. Students pay 35 EUR per week for 5 meals. Target: the 100,000+ international students in Île-de-France who miss home food and lack time or skills to cook it.",
-  fr: "Un abonnement hebdomadaire de plats pour les étudiants étrangers à Paris : des plats « comme à la maison » de leur pays d'origine (Afrique de l'Ouest, Maghreb, Asie), cuisinés par des cuisiniers de la diaspora. Les étudiants paient 35 EUR par semaine pour 5 repas. Cible : les plus de 100 000 étudiants internationaux d'Île-de-France à qui la cuisine de chez eux manque et qui n'ont pas le temps ou le savoir-faire pour la préparer.",
+  en: "A platform that matches students looking for housing in Paris with seniors who live alone in a home that has become too big for them. The student pays a reduced rent (200 to 300 EUR a month) in exchange for being present in the evening and helping with small tasks. The platform checks both profiles, provides the contract, and charges each party a 150 EUR yearly membership fee.",
+  fr: "Une plateforme qui met en relation des étudiants qui cherchent un logement à Paris avec des seniors qui vivent seuls dans un logement devenu trop grand. L'étudiant paie un loyer réduit (200 à 300 EUR par mois) en échange d'une présence le soir et de petits services. La plateforme vérifie les profils, fournit le contrat et se rémunère avec 150 EUR de frais d'adhésion par an, payés par chaque partie.",
 };
 
 // Synthetic interview (no real person), written with the usual founder traps
 // so the bias detector has something to catch in the demo.
 export const EXAMPLE_NOTES: Record<Lang, string> = {
-  en: `Interview with A., 22, master's student in Paris (arrived from Dakar a year ago).
+  en: `Interview with Mrs D., 79, widow, lives alone in a 4-room flat in Paris 15th.
 
-Me: Do you miss food from home?
-A.: Yes, a lot, especially my mother's thieboudienne.
-Me: Would you pay 35 euros a week to get home-made Senegalese dishes?
-A.: Yes, honestly that would be amazing, it's a great idea!
-Me: What did you eat yesterday for lunch?
-A.: A sandwich at the CROUS university cafeteria, it's 3.30 euros, I eat there almost every day.
-Me: When was the last time you ate Senegalese food in Paris?
-A.: Two months ago, at a restaurant in Château Rouge. It was expensive, 18 euros, so I rarely go.
-Me: Our service would deliver 5 meals a week to your place, cooked by diaspora moms, would you like that?
-A.: Yes yes, sounds good.
-Me: Do you cook yourself?
-A.: I cook all the time.
+Me: Don't you feel lonely in the evening?
+Mrs D.: Yes, the evenings are long since my husband passed away.
+Me: Wouldn't it be reassuring to have a nice student living with you?
+Mrs D.: Oh yes, that would be wonderful, it's a lovely idea!
+Me: When was the last time someone stayed at your place for more than a few days?
+Mrs D.: My grandson, last summer, for a week. By the end I was exhausted, I like my habits.
+Me: Has anyone ever suggested getting help at home?
+Mrs D.: My daughter wanted to hire a home helper two years ago. I said no, I don't like strangers in my kitchen.
+Me: Our platform checks every student and provides the contract, for 150 euros a year. Would you sign up?
+Mrs D.: Why not, if my daughter agrees.
+Me: Do you have a free room?
+Mrs D.: There is my husband's study, but I haven't touched it.
+Me: Do you see your neighbours?
+Mrs D.: I'm always on my own.
 
-My conclusions: A. loves the idea and would pay 35 euros. Hypothesis validated.`,
-  fr: `Entretien avec A., 22 ans, étudiante en master à Paris (arrivée de Dakar il y a 1 an).
+My conclusions: Mrs D. loves the idea, seniors want a student at home. Hypothesis validated, she will pay the 150 euros.`,
+  fr: `Entretien avec Mme D., 79 ans, veuve, vit seule dans un 4 pièces à Paris 15e.
 
-Moi : Est-ce que la cuisine de chez toi te manque ?
-A. : Oui, énormément, surtout le thiéboudienne de ma mère.
-Moi : Tu serais prête à payer 35 euros par semaine pour recevoir des plats sénégalais faits maison ?
-A. : Oui, franchement ce serait génial, c'est une super idée !
-Moi : Qu'est-ce que tu as mangé hier midi ?
-A. : Un sandwich au resto U du CROUS, c'est 3,30 euros, je mange là presque tous les jours.
-Moi : La dernière fois que tu as mangé sénégalais à Paris, c'était quand ?
-A. : Il y a deux mois, dans un restaurant à Château Rouge. C'était cher, 18 euros, donc j'y vais rarement.
-Moi : Notre service livrerait chez toi 5 repas par semaine, cuisinés par des mamans de la diaspora, ça te plairait ?
-A. : Oui oui, ça a l'air bien.
-Moi : Tu cuisines toi-même ?
-A. : Je cuisine tout le temps.
+Moi : Vous ne vous sentez pas seule le soir ?
+Mme D. : Si, les soirées sont longues depuis que mon mari est parti.
+Moi : Ce serait rassurant d'avoir un gentil étudiant chez vous, non ?
+Mme D. : Oh oui, ce serait formidable, c'est une très belle idée !
+Moi : La dernière fois que quelqu'un a dormi chez vous plus de quelques jours, c'était quand ?
+Mme D. : Mon petit-fils, l'été dernier, une semaine. À la fin j'étais épuisée, j'ai mes habitudes.
+Moi : On vous a déjà proposé de l'aide à domicile ?
+Mme D. : Ma fille voulait prendre une auxiliaire de vie il y a deux ans. J'ai refusé, je n'aime pas avoir des inconnus dans ma cuisine.
+Moi : Notre plateforme vérifie chaque étudiant et fournit le contrat, pour 150 euros par an. Vous vous inscririez ?
+Mme D. : Pourquoi pas, si ma fille est d'accord.
+Moi : Vous avez une chambre libre ?
+Mme D. : Il y a le bureau de mon mari, mais je n'y ai pas touché.
+Moi : Vous voyez vos voisins ?
+Mme D. : Je suis toujours toute seule.
 
-Mes conclusions : A. adore l'idée et paierait 35 euros. Hypothèse validée.`,
+Mes conclusions : Mme D. adore l'idée, les seniors veulent un étudiant chez eux. Hypothèse validée, elle paiera les 150 euros.`,
 };

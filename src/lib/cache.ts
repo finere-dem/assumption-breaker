@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import exampleCache from "@/data/example-cache.json";
+import exampleEn from "@/data/example-cache.en.json";
+import exampleFr from "@/data/example-cache.fr.json";
 
 // Two layers: results precomputed for the built-in examples (most demo visitors
 // click "Use an example"), then a small in-memory cache for repeated requests.
@@ -7,7 +8,7 @@ import exampleCache from "@/data/example-cache.json";
 
 const MAX_MEMORY = 200;
 const memory = new Map<string, unknown>();
-const examples = exampleCache as Record<string, unknown>;
+const examples = { ...exampleEn, ...exampleFr } as Record<string, unknown>;
 
 function stable(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stable);

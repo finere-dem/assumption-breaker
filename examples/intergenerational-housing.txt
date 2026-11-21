@@ -1,0 +1,1 @@
+A platform that matches students looking for housing in Paris with seniors who live alone in a home that has become too big for them. The student pays a reduced rent (200 to 300 EUR a month) in exchange for being present in the evening and helping with small tasks. The platform checks both profiles, provides the contract, and charges each party a 150 EUR yearly membership fee.

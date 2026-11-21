@@ -32,8 +32,8 @@ Every run shows its token count. Cost: 0 EUR.
 ```bash
 npm install
 cp .env.example .env.local   # add your free Groq and Tavily keys (Gemini optional)
-npm run pipeline -- examples/meal-prep-students.txt
-npm run pipeline -- examples/meal-prep-students.txt --pick 2,4,5   # choose which assumptions to test
+npm run pipeline -- examples/intergenerational-housing.txt
+npm run pipeline -- examples/intergenerational-housing.txt --pick 2,4,5   # choose which assumptions to test
 ```
 
 A typical run: about 1 minute, 7 model calls, 10,000 to 13,000 tokens.

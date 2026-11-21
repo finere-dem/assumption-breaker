@@ -57,7 +57,7 @@ flowchart LR
 ## Accomplishments that we're proud of
 
 - An agent that is useful precisely because it refuses to decide.
-- On a synthetic biased interview, the detector flags 4 to 5 traps, including the founder's own conclusion "Hypothesis validated" when the interviewee actually eats at a 3.30 EUR university cafeteria every day.
+- On a synthetic biased interview with a 79-year-old widow, the detector flags the leading questions, the pitch, the compliment ("it's a lovely idea!") and the founder's own conclusion "Hypothesis validated", and it extracts the two facts that contradict it: she refused a home helper two years ago ("I don't like strangers in my kitchen") and a one-week visit from her grandson exhausted her.
 - A complete run costs 0 EUR.
 
 ## What we learned

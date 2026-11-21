@@ -1,7 +1,7 @@
 // CLI run of the agent pipeline: idea -> hypotheses -> (founder picks) -> evidence.
 // Usage:
-//   npm run pipeline -- examples/meal-prep-students.txt            (picks H1,H2,H3)
-//   npm run pipeline -- examples/meal-prep-students.txt --pick 2,4,5 --lang fr
+//   npm run pipeline -- examples/intergenerational-housing.txt            (picks H1,H2,H3)
+//   npm run pipeline -- examples/intergenerational-housing-fr.txt --pick 2,4,5 --lang fr
 // The --pick flag stands in for the founder's ranking (human checkpoint #1 in the UI).
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
