@@ -2,6 +2,7 @@ import { computeSignal } from "@/lib/agent/signal";
 import type { Dict } from "@/lib/ui/i18n";
 import { useState } from "react";
 import { buildReport, minutesSince } from "@/lib/ui/report";
+import { buildPdf } from "@/lib/ui/report-pdf";
 import { keptEvidence, MIN_REASON, type Decision, type Session } from "@/lib/ui/session";
 import type { Patch } from "./AssumptionBreaker";
 
@@ -28,14 +29,22 @@ export function StepVerdict({
   const ready = session.decision !== null && missing === 0;
   const [openedAt] = useState(() => Date.now());
 
-  function download() {
-    const blob = new Blob([buildReport(session)], { type: "text/markdown;charset=utf-8" });
+  function save(blob: Blob, name: string) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "assumption-breaker-report.md";
+    a.download = name;
     a.click();
-    URL.revokeObjectURL(url);
+    // Mobile browsers open the file asynchronously: revoke later, not right away.
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
+
+  async function downloadPdf() {
+    save(await buildPdf(session), "assumption-breaker-report.pdf");
+  }
+
+  function downloadMd() {
+    save(new Blob([buildReport(session)], { type: "text/markdown;charset=utf-8" }), "assumption-breaker-report.md");
   }
 
   return (
@@ -109,8 +118,11 @@ export function StepVerdict({
         <Button variant="ghost" onClick={() => update({ step: 4 })}>
           {t.back}
         </Button>
-        <Button onClick={download} disabled={!ready}>
+        <Button onClick={downloadPdf} disabled={!ready}>
           {t.download}
+        </Button>
+        <Button variant="ghost" onClick={downloadMd} disabled={!ready} className="text-xs">
+          {t.downloadMd}
         </Button>
       </div>
 
